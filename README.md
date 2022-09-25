@@ -27,7 +27,7 @@
     image = plt.imshow(mainGrid)
     plt.axis('off')
     
-    # Function to update the grid (using the four rules listed at the top of this file)
+    # Function to update the grid
     def update(frame):
         global mainGrid
         
