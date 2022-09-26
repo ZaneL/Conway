@@ -58,7 +58,7 @@ anim.save(r"C:\Users\zane4\Desktop\conway\example1.gif", writer=writergif)
 
 # Conway's Game of Life - Example 2
 
-![Example 2](https://i.ibb.co/G30xMVz/example2.gif)
+![Example 2](https://i.ibb.co/4NnCKyk/example2.gif)
 
 ```python
 ###############################################################################
