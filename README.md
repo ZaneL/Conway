@@ -118,4 +118,71 @@ anim.save(r"C:\Users\zane4\Desktop\conway\example2.gif", writer=writergif)
 #anim.save(r"C:\Users\zane4\Desktop\conway\example2.mp4", writer=writermp4)
 ```
 
+# Conway's Game of Life - Example 3
+
+![Example 3](https://i.ibb.co/MpWr5tR/example3.gif)
+
+```python
+###############################################################################
+# Conway's Game of Life - Example 3
+############################################################################### 
+
+import numpy as np
+from numpy import random
+from scipy.signal import convolve2d
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation, PillowWriter, FFMpegWriter
+
+# Update frequency
+T = 10
+
+# Size of game grid
+gridSizeX = 64
+gridSizeY = 64
+
+# Convolution kernel, used for determining the number of neighbors
+x, y = np.meshgrid(list(range(-9, 10)), list(range(-9, 10)))
+r = np.sqrt(x**2 + y**2)
+kernel = norm.pdf(r, 5, 1.5)
+kernel = kernel / np.sum(kernel)
+plt.imshow(kernel)
+
+# Random starting grid
+mainGrid = random.rand(gridSizeX, gridSizeY)
+
+# Setup plot window
+fig = plt.figure(frameon=False)
+image = plt.imshow(mainGrid)
+plt.axis('off')
+
+def growth(neighborGrid):
+    bell = lambda x, m, s: np.exp(-((x-m)/s)**2 / 2)
+    m = 0.135
+    s = 0.015
+    return bell(neighborGrid, m, s)*2-1
+
+# Function to update the grid
+def update(frame):
+    global mainGrid
+    
+    # Use 2D convolution to determine the number of active cells around each target cell
+    neighborGrid = convolve2d(mainGrid, kernel, mode='same', boundary='wrap')
+    
+    # Determine whether cells grow, shrink or stay the same
+    mainGrid = np.clip(mainGrid + (1 / T) * growth(neighborGrid), 0, 1)
+    
+    # Update the plot image
+    image.set_array(mainGrid)
+
+# Run animation
+anim = FuncAnimation(fig, update, interval=30, frames=500, repeat=False)
+
+# Save as gif
+writergif = PillowWriter(fps=30)
+anim.save(r"C:\Users\zane4\Desktop\conway\example3.gif", writer=writergif)
+
+#writermp4 = FFMpegWriter(fps=25, bitrate=3000)
+#anim.save(r"C:\Users\zane4\Desktop\conway\example2.mp4", writer=writermp4)
+```
 
