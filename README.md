@@ -56,7 +56,7 @@ writergif = PillowWriter(fps=10)
 anim.save(r"C:\Users\zane4\Desktop\conway\example1.gif", writer=writergif)
 ```
 
-# Conway's Game of Life - Example 1
+# Conway's Game of Life - Example 2
 
 ![Example 2](https://i.ibb.co/G30xMVz/example2.gif)
 
