@@ -1,6 +1,9 @@
 # Conway's Game of Life - Example 1
 
-![Example 1](https://i.ibb.co/mNFnCMg/example1.gif)
+| Animation |  Kernel   |
+| --------- | --------- |
+| <img src="https://github.com/ZaneL/Conway/blob/main/example1/animation.gif?raw=true" width="300">  | <img src="https://github.com/ZaneL/Conway/blob/main/example1/kernel.jpg?raw=true" width="300">  |
+
 
 ```python
 ###############################################################################
@@ -53,12 +56,18 @@ anim = FuncAnimation(fig, update, interval=30, frames=120, repeat=False)
 
 # Save as gif
 writergif = PillowWriter(fps=10)
-anim.save(r"C:\Users\zane4\Desktop\conway\example1.gif", writer=writergif)
+anim.save(r"C:\Users\zane4\Desktop\conway\example1\animation.gif", writer=writergif)
+
+# Save kernel image
+plt.imshow(kernel)
+plt.savefig(r"C:\Users\zane4\Desktop\conway\example1\kernel.jpg")
 ```
 
 # Conway's Game of Life - Example 2
 
-![Example 2](https://i.ibb.co/4NnCKyk/example2.gif)
+| Animation |  Kernel   | Growth Function | 
+| --------- | --------- | --------- |
+| <img src="https://github.com/ZaneL/Conway/blob/main/example2/animation.gif?raw=true" width="300">  | <img src="https://github.com/ZaneL/Conway/blob/main/example2/kernel.jpg?raw=true" width="300">  | <img src="https://github.com/ZaneL/Conway/blob/main/example2/growth.jpg?raw=true" width="300">
 
 ```python
 ###############################################################################
@@ -69,7 +78,7 @@ import numpy as np
 from numpy import random
 from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, PillowWriter, FFMpegWriter
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 # Number of states
 numStates = 12
@@ -108,19 +117,30 @@ def update(frame):
     image.set_array(mainGrid)
 
 # Run animation
-anim = FuncAnimation(fig, update, interval=30, frames=1000, repeat=False)
+anim = FuncAnimation(fig, update, interval=30, frames=500, repeat=False)
 
 # Save as gif
-writergif = PillowWriter(fps=25)
-anim.save(r"C:\Users\zane4\Desktop\conway\example2.gif", writer=writergif)
+writergif = PillowWriter(fps=30)
+anim.save(r"C:\Users\zane4\Desktop\conway\example2\animation.gif", writer=writergif)
 
-#writermp4 = FFMpegWriter(fps=25, bitrate=3000)
-#anim.save(r"C:\Users\zane4\Desktop\conway\example2.mp4", writer=writermp4)
+# Save kernel image
+plt.imshow(kernel)
+plt.savefig(r"C:\Users\zane4\Desktop\conway\example2\kernel.jpg")
+
+# Save the growth function
+plt.clf()
+x = np.arange(0, 100, 1)
+plt.plot(x, growth(x), color='black')
+plt.axhspan(0, 1, facecolor='green', alpha=0.2)
+plt.axhspan(-1, 0, facecolor='red', alpha=0.2)
+plt.savefig(r"C:\Users\zane4\Desktop\conway\example2\growth.jpg")
 ```
 
 # Conway's Game of Life - Example 3
 
-![Example 3](https://i.ibb.co/MpWr5tR/example3.gif)
+| Animation |  Kernel   | Growth Function | 
+| --------- | --------- | --------- |
+| <img src="https://github.com/ZaneL/Conway/blob/main/example3/animation.gif?raw=true" width="300">  | <img src="https://github.com/ZaneL/Conway/blob/main/example3/kernel.jpg?raw=true" width="300">  | <img src="https://github.com/ZaneL/Conway/blob/main/example3/growth.jpg?raw=true" width="300">
 
 ```python
 ###############################################################################
@@ -132,7 +152,7 @@ from numpy import random
 from scipy.signal import convolve2d
 from scipy.stats import norm
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, PillowWriter, FFMpegWriter
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 # Update frequency
 T = 10
@@ -142,11 +162,10 @@ gridSizeX = 64
 gridSizeY = 64
 
 # Convolution kernel, used for determining the number of neighbors
-x, y = np.meshgrid(list(range(-9, 10)), list(range(-9, 10)))
-r = np.sqrt(x**2 + y**2)
-kernel = norm.pdf(r, 5, 1.5)
+xKernel, yKernel = np.meshgrid(list(range(-9, 10)), list(range(-9, 10)))
+rKernel = np.sqrt(xKernel**2 + yKernel**2)
+kernel = norm.pdf(rKernel, 5, 1.5)
 kernel = kernel / np.sum(kernel)
-plt.imshow(kernel)
 
 # Random starting grid
 mainGrid = random.rand(gridSizeX, gridSizeY)
@@ -157,10 +176,9 @@ image = plt.imshow(mainGrid)
 plt.axis('off')
 
 def growth(neighborGrid):
-    bell = lambda x, m, s: np.exp(-((x-m)/s)**2 / 2)
-    m = 0.135
-    s = 0.015
-    return bell(neighborGrid, m, s)*2-1
+    mean = 0.135    #mean = 0.248
+    std = 0.015     #std = 0.02
+    return ((norm.pdf(neighborGrid, mean, std) / norm.pdf(mean, mean, std)) * 2) - 1
 
 # Function to update the grid
 def update(frame):
@@ -176,13 +194,21 @@ def update(frame):
     image.set_array(mainGrid)
 
 # Run animation
-anim = FuncAnimation(fig, update, interval=30, frames=500, repeat=False)
+anim = FuncAnimation(fig, update, interval=30, frames=1000, repeat=False)
 
 # Save as gif
 writergif = PillowWriter(fps=30)
-anim.save(r"C:\Users\zane4\Desktop\conway\example3.gif", writer=writergif)
+anim.save(r"C:\Users\zane4\Desktop\conway\example3\animation.gif", writer=writergif)
 
-#writermp4 = FFMpegWriter(fps=25, bitrate=3000)
-#anim.save(r"C:\Users\zane4\Desktop\conway\example2.mp4", writer=writermp4)
+# Save kernel image
+plt.imshow(kernel)
+plt.savefig(r"C:\Users\zane4\Desktop\conway\example3\kernel.jpg")
+
+# Save the growth function
+plt.clf()
+x = np.arange(0, 1, 0.001)
+plt.plot(x, growth(x), color='black')
+plt.axhspan(0, 1, facecolor='green', alpha=0.2)
+plt.axhspan(-1, 0, facecolor='red', alpha=0.2)
+plt.savefig(r"C:\Users\zane4\Desktop\conway\example3\growth.jpg")
 ```
-
